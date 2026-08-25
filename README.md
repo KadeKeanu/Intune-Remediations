@@ -1,70 +1,64 @@
 # Intune Remediations
 
-A collection of Microsoft Intune PowerShell detection and remediation scripts for managed Windows devices.
+A growing collection of PowerShell scripts designed for Microsoft Intune Remediations and Windows endpoint management.
 
-## Repository structure
+This repository contains detection and remediation scripts for automating common IT administration, application management, security, and endpoint maintenance tasks.
+
+## Repository Structure
 
 ```text
 Intune-Remediations/
 ├── README.md
-├── .gitignore
 ├── WinGet-Application-Updates/
+│   ├── README.md
 │   ├── Detection-WinGet-Updates.ps1
 │   └── Remediation-WinGet-Update-All.ps1
 └── Dell-SupportAssist-Removal/
+    ├── README.md
     ├── Uninstall-DellSupportAssist_Detection.ps1
     └── Uninstall-DellSupportAssist_Remediation.ps1
 ```
 
-## WinGet Application Updates
+## Available Remediations
 
-The detection script checks for available WinGet application updates. If updates are found, Intune runs the remediation script.
+### WinGet Application Updates
+Detects applications with available WinGet updates and attempts to update all supported applications silently.
 
-The remediation script runs:
+### Dell SupportAssist Removal
+Detects and removes Dell SupportAssist and related components from managed Windows devices.
 
-```powershell
-winget upgrade --all --include-unknown --silent --accept-package-agreements --accept-source-agreements --disable-interactivity
-```
+## How Intune Remediations Work
 
-Recommended Intune settings:
+- Detection `Exit 0` = No remediation required.
+- Detection `Exit 1` = Remediation required.
+- Remediation `Exit 0` = Remediation successful.
+- Remediation `Exit 1` = Remediation failed.
 
-| Setting | Value |
+## Recommended Intune Settings
+
+| Setting | Recommended Value |
 |---|---|
 | Run using logged-on credentials | No |
-| Enforce script signature check | No, unless scripts are signed |
+| Run as | SYSTEM |
 | Run in 64-bit PowerShell | Yes |
-| Context | SYSTEM |
+| Enforce script signature check | No, unless scripts are signed |
 
-Logs:
+## Deployment Recommendations
 
-```text
-C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\WinGet-Detection.log
-C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\WinGet-AppUpdate.log
-```
+1. Review the PowerShell scripts.
+2. Test on a small pilot group.
+3. Review detection and remediation results.
+4. Confirm device and application behaviour.
+5. Expand deployment gradually.
 
-## Dell SupportAssist Removal
+## Logging
 
-The detection script checks both 32-bit and 64-bit uninstall registry locations for Dell SupportAssist-related applications.
-
-If SupportAssist is detected, Intune runs the remediation script. The remediation script attempts silent removal using the application's quiet uninstall command, MSI product code, or Dell's SupportAssist uninstaller.
-
-Common successful MSI exit codes `0`, `1641`, and `3010` are accepted.
-
-## Deployment flow
+Where applicable, scripts write logs to:
 
 ```text
-Detection
-   ↓
-Issue found?
-   ├── No  → Exit 0 → No remediation
-   └── Yes → Exit 1 → Run remediation
-                         ↓
-                    Success → Exit 0
-                    Failure → Exit 1
+C:\ProgramData\Microsoft\IntuneManagementExtension\Logs\
 ```
 
-## Important
+## Disclaimer
 
-Test these scripts with a pilot device group before broad production deployment.
-
-The WinGet script only updates applications that WinGet can identify and for which an update is available from the configured sources.
+Review and test all scripts before production deployment. Application installers, registry locations, vendor software, WinGet packages, and Windows behaviour can change over time.
