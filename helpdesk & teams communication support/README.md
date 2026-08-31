@@ -138,15 +138,6 @@ Before deploying the script:
 5. Regularly review role assignments and remove access that is no longer required.
 6. Consider Microsoft Entra Privileged Identity Management (PIM) for eligible/time-limited privileged access where available.
 
-## Example Repository Structure
-
-```text
-Microsoft-365/
-└── Entra-ID/
-    └── RBAC/
-        ├── Assign-1LS-SupportRoles-GitHub.ps1
-        └── README.md
-```
 
 ## Disclaimer
 
